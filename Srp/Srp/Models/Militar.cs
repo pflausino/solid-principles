@@ -6,6 +6,13 @@ namespace Srp.Models
 {
     public class Militar
     {
+        public Militar(string nome, Patente patente, string acesso)
+        {
+            Nome = nome;
+            Patente = patente;
+            Acesso = acesso;
+        }
+
         public string Nome { get; set; }
         public Patente Patente { get; set; }
         public string Acesso { get; set; }

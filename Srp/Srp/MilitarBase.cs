@@ -8,36 +8,55 @@ namespace Srp
 {
     public class MilitarBase
     {
+        private readonly string _enderecoDeLog = Path.Combine(Directory.GetCurrentDirectory(), "logDbFile.txt");
+
         public void Acessar()
         {
-            var militar = new Militar();
-
-            militar.Nome = "Michael";
-            militar.Patente = Patente.Recruta;
-            militar.Acesso = "Gabinente";
-
-            string enderecoDeLog = Path.Combine(Directory.GetCurrentDirectory(), "logDbFile.txt");
-            var oldLog = File.ReadAllText(enderecoDeLog, Encoding.UTF8);
-            var newLog = oldLog + $"Acesso de : {militar.Nome} as {DateTime.Now}" + Environment.NewLine;
+            var militar = new Militar("Michael", Patente.Major, "Gabinete");
 
             if (militar.Acesso == "Entrada")
             {
-                newLog += "Acesso Permitido" + Environment.NewLine;
-                Console.WriteLine($"Bem vindo Sr {militar.Nome}");
+                string message = "Acesso Permitido";
+                saveLog(militar, message);
+                AvisoConsole(militar, message);
+                return;
             }
-
-            if (militar.Acesso == "Gabinente" && militar.Patente >= Patente.Captao)
+            if (militar.Acesso == "Gabinete" && militar.Patente >= Patente.Captao)
             {
-                newLog += "Acesso Permitido" + Environment.NewLine;
-                Console.WriteLine($"Bem vindo Sr {militar.Nome}");
+                string message = "Acesso Permitido";
+                saveLog(militar, message);
+                AvisoConsole(militar, message);
             }
             else
             {
-                newLog += "Acesso Negado" + Environment.NewLine;
-                Console.WriteLine($"Nao pode entrar");
-            }
+                string message = "Acesso Negado";
 
-            File.WriteAllText(enderecoDeLog, newLog);
+                saveLog(militar, message);
+                AvisoConsole(militar, message);
+            }
+        }
+
+        private string MontaLog(Militar militar, string resultadoAcesso)
+        {
+            var oldLog = File.ReadAllText(_enderecoDeLog, Encoding.UTF8);
+            return oldLog +
+                $"Acesso de : {militar.Nome} as {DateTime.Now}" +
+                Environment.NewLine +
+                resultadoAcesso +
+                Environment.NewLine;
+        }
+
+        private void saveLog(Militar militar, string resultadoAcesso)
+        {
+            File.WriteAllText(_enderecoDeLog, MontaLog(militar, resultadoAcesso));
+        }
+
+        private void AvisoConsole(Militar militar, string resultadoAcesso)
+        {
+            if (resultadoAcesso == "Acesso Negado")
+                Console.WriteLine($"{militar.Nome} Nao pode entrar");
+            else
+                Console.WriteLine($"Bem vindo Sr {militar.Nome}");
         }
     }
 }
