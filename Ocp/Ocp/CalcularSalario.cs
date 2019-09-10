@@ -20,7 +20,7 @@ namespace Ocp
                     break;
 
                 case Patente.Major:
-                    salario = 1000;
+                    salario = 6000;
                     break;
 
                 default:
